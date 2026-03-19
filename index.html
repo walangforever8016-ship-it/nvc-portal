@@ -279,7 +279,12 @@ var ADVISER_CONFIG=[
 var currentTeacher="",currentSubject="",currentSection="",currentSelectedClass="",pendingRecords=[];
 var store={ICT11:[],ICT12:[],ABM11:[],ABM12:[]};
 var adviserSections=[];
-var isOnline=(window.location.protocol!=="file:");
+var isOnline=(window.location.protocol!=="file:"
+  &&window.location.hostname.indexOf("github.io")===-1
+  &&window.location.hostname.indexOf("githubusercontent.com")===-1);running (not GitHub Pages or file://)
+var isOnline=(window.location.protocol!=="file:"
+  &&window.location.hostname.indexOf("github.io")===-1
+  &&window.location.hostname.indexOf("githubusercontent.com")===-1);
 
 function loadStorage(){
   ["ICT11","ICT12","ABM11","ABM12"].forEach(function(s){
@@ -322,9 +327,8 @@ function syncFromServer(s,cb){
 }
 loadStorage();
 (function(){
-  var badge=document.createElement("div");
-  badge.id="mode-badge";
-  badge.style.cssText="position:fixed;bottom:10px;right:10px;padding:5px 12px;border-radius:20px;font-size:0.75em;font-weight:bold;z-index:9999;opacity:0.85;";
+  if(isOnline){badge.style.background="#28a745";badge.style.color="white";badge.textContent="ONLINE — data syncs across devices";}
+  else{badge.style.background="#6c757d";badge.style.color="white";badge.textContent="OFFLINE — data saved locally";}  badge.style.cssText="position:fixed;bottom:10px;right:10px;padding:5px 12px;border-radius:20px;font-size:0.75em;font-weight:bold;z-index:9999;opacity:0.85;";
   if(isOnline){badge.style.background="#28a745";badge.style.color="white";badge.textContent="ONLINE — data syncs across devices";}
   else{badge.style.background="#6c757d";badge.style.color="white";badge.textContent="OFFLINE — data saved locally";}
   document.body.appendChild(badge);
@@ -700,82 +704,82 @@ function saveNewSection(){
   alert("Section "+name+" created and added to adviser."+advGroup+" group.");
 }
 function openReset(role){
-    var allowed=[];
-    if(role==="teacher"){
+  var allowed=[];
+  if(role==="teacher"){
     for(var sec in SECTION_CONFIG){var cfg=SECTION_CONFIG[sec];for(var i=0;i<cfg.teachers.length;i++){if(cfg.teachers[i].name===currentTeacher){allowed.push(sec);break;}}}
-    }else{allowed=adviserSections.slice();}
-    var box=document.getElementById("reset-section-checks");
-    box.innerHTML=allowed.map(function(s){
+  }else{allowed=adviserSections.slice();}
+  var box=document.getElementById("reset-section-checks");
+  box.innerHTML=allowed.map(function(s){
     return "<label style='display:block;margin-bottom:6px;'><input type='checkbox' value='"+s+"' style='width:auto;margin-right:8px;'>"+s.replace("ICT","ICT ").replace("ABM","ABM ")+"</label>";
-    }).join("");
-    document.getElementById("reset-confirm-input").value="";
-    openModal("modal-reset");
+  }).join("");
+  document.getElementById("reset-confirm-input").value="";
+  openModal("modal-reset");
 }
 function doReset(){
-    var confirmVal=document.getElementById("reset-confirm-input").value.trim();
-    if(confirmVal!=="RESET"){alert("Type RESET exactly to confirm.");return;}
-    var checks=document.querySelectorAll("#reset-section-checks input[type=checkbox]:checked");
-    if(checks.length===0){alert("Select at least one section.");return;}
-    var resetSections=[];
-    checks.forEach(function(c){resetSections.push(c.value);});
-    resetSections.forEach(function(s){
+  var confirmVal=document.getElementById("reset-confirm-input").value.trim();
+  if(confirmVal!=="RESET"){alert("Type RESET exactly to confirm.");return;}
+  var checks=document.querySelectorAll("#reset-section-checks input[type=checkbox]:checked");
+  if(checks.length===0){alert("Select at least one section.");return;}
+  var resetSections=[];
+  checks.forEach(function(c){resetSections.push(c.value);});
+  resetSections.forEach(function(s){
     store[s]=[];saveStorage(s);
     if(SECTION_CONFIG[s]){SECTION_CONFIG[s].students=[];}
     localStorage.removeItem("nvc_students_"+s);
     if(isOnline){try{var xhr=new XMLHttpRequest();xhr.open("POST","/api/reset",true);xhr.setRequestHeader("Content-Type","application/json");xhr.send(JSON.stringify({section:s}));}catch(e){}}
-    });
-    closeModal("modal-reset");
-    if(currentSection&&resetSections.indexOf(currentSection)>-1){pendingRecords=[];autoLoadRoster();loadTeacherRecords();}
-    if(currentSelectedClass&&resetSections.indexOf(currentSelectedClass)>-1){renderAdviserRecords(currentSelectedClass);}
-    alert("Reset complete for: "+resetSections.join(", "));
+  });
+  closeModal("modal-reset");
+  if(currentSection&&resetSections.indexOf(currentSection)>-1){pendingRecords=[];autoLoadRoster();loadTeacherRecords();}
+  if(currentSelectedClass&&resetSections.indexOf(currentSelectedClass)>-1){renderAdviserRecords(currentSelectedClass);}
+  alert("Reset complete for: "+resetSections.join(", "));
 }
 (function loadPersistedStudents(){
-    for(var sec in SECTION_CONFIG){
+  for(var sec in SECTION_CONFIG){
     var saved=localStorage.getItem("nvc_students_"+sec);
     if(saved){try{SECTION_CONFIG[sec].students=JSON.parse(saved);}catch(e){}}
-    }
+  }
 })();
 </script>
 
 <!-- ADD STUDENTS MODAL -->
 <div class="modal-overlay" id="modal-students">
-    <div class="modal-box">
+  <div class="modal-box">
     <h3>&#128100; Add Students</h3>
     <label>Section:</label>
     <select id="ms-section" onchange="msLoadExisting()"></select>
     <label>Student Name:</label>
     <div style="display:flex;gap:8px;">
-        <input type="text" id="ms-name" placeholder="Type name and press Add" spellcheck="false" autocomplete="off" style="flex:1;" onkeydown="if(event.key==='Enter')msAddTag()">
-        <button class="btn-maroon" onclick="msAddTag()" style="white-space:nowrap;">+ Add</button>
+      <input type="text" id="ms-name" placeholder="Type name and press Add" spellcheck="false" autocomplete="off" style="flex:1;" onkeydown="if(event.key==='Enter')msAddTag()">
+      <button class="btn-maroon" onclick="msAddTag()" style="white-space:nowrap;">+ Add</button>
     </div>
     <div style="font-size:0.8em;color:var(--gray);margin-bottom:6px;">Current students in section:</div>
     <div id="student-tags"></div>
     <div class="modal-actions">
-        <button class="btn-maroon" onclick="msSave()">Save Students</button>
-        <button onclick="closeModal('modal-students')" style="background:#eee;color:#333;">Cancel</button>
+      <button class="btn-maroon" onclick="msSave()">Save Students</button>
+      <button onclick="closeModal('modal-students')" style="background:#eee;color:#333;">Cancel</button>
     </div>
-    </div>
+  </div>
 </div>
 <!-- ADD SECTION MODAL -->
 <div class="modal-overlay" id="modal-section">
-    <div class="modal-box">
+  <div class="modal-box">
     <h3>&#43; Add New Section</h3>
     <label>Section Name (e.g. ICT13, ABM13):</label>
     <input type="text" id="sec-name" placeholder="e.g. ICT13" spellcheck="false" autocomplete="off">
     <label>Assign to Adviser Group:</label>
     <select id="sec-adviser">
-        <option value="11">adviser.11 (ICT11 &amp; ABM11 group)</option>
-        <option value="12">adviser.12 (ICT12 &amp; ABM12 group)</option>
+      <option value="11">adviser.11 (ICT11 &amp; ABM11 group)</option>
+      <option value="12">adviser.12 (ICT12 &amp; ABM12 group)</option>
     </select>
     <div class="modal-actions">
-        <button class="btn-maroon" onclick="saveNewSection()">Create Section</button>
-        <button onclick="closeModal('modal-section')" style="background:#eee;color:#333;">Cancel</button>
+      <button class="btn-maroon" onclick="saveNewSection()">Create Section</button>
+      <button onclick="closeModal('modal-section')" style="background:#eee;color:#333;">Cancel</button>
     </div>
-    </div>
+  </div>
 </div>
 <!-- RESET SCHOOL YEAR MODAL -->
 <div class="modal-overlay" id="modal-reset">
-    <div class="modal-box">
+  <div class="modal-box">
     <h3 style="color:#dc3545;">&#9888; Reset School Year</h3>
     <div class="warn-box">This will permanently delete ALL attendance records and student lists for your assigned sections. This cannot be undone. Use only at the start of a new school year.</div>
     <label>Select sections to reset:</label>
@@ -783,10 +787,10 @@ function doReset(){
     <label>Type <strong>RESET</strong> to confirm:</label>
     <input type="text" id="reset-confirm-input" placeholder="Type RESET" spellcheck="false" autocomplete="off">
     <div class="modal-actions">
-        <button class="danger-btn" onclick="doReset()" style="flex:1;">Reset Selected Sections</button>
-        <button onclick="closeModal('modal-reset')" style="background:#eee;color:#333;flex:1;padding:11px;border:none;border-radius:6px;cursor:pointer;font-weight:bold;">Cancel</button>
+      <button class="danger-btn" onclick="doReset()" style="flex:1;">Reset Selected Sections</button>
+      <button onclick="closeModal('modal-reset')" style="background:#eee;color:#333;flex:1;padding:11px;border:none;border-radius:6px;cursor:pointer;font-weight:bold;">Cancel</button>
     </div>
-    </div>
+  </div>
 </div>
 </body>
 </html>
