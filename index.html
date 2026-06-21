@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="X-Frame-Options" content="DENY">
+<meta http-equiv="X-XSS-Protection" content="1; mode=block">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>NVC Digital Monitoring System</title>
+<style>
+#splash{position:fixed;top:0;left:0;width:100%;height:100%;background:#ffffff;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:99999;overflow:hidden;}#splash::before{content:'';position:absolute;top:-120px;right:-120px;width:400px;height:400px;background:radial-gradient(circle,rgba(204,0,0,0.07) 0%,transparent 70%);border-radius:50%;}#splash::after{content:'';position:absolute;bottom:-100px;left:-100px;width:350px;height:350px;background:radial-gradient(circle,rgba(128,0,0,0.05) 0%,transparent 70%);border-radius:50%;}.splash-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;animation:contentIn 0.9s cubic-bezier(0.16,1,0.3,1) forwards;}@keyframes contentIn{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}.splash-icon{width:120px;height:120px;background:linear-gradient(145deg,#cc0000 0%,#800000 100%);border-radius:32px;display:flex;align-items:center;justify-content:center;margin-bottom:30px;box-shadow:0 16px 48px rgba(180,0,0,0.28),0 4px 12px rgba(180,0,0,0.15),inset 0 1px 0 rgba(255,255,255,0.15);}.splash-icon svg{width:72px;height:72px;}.splash-wordmark{display:flex;align-items:baseline;gap:0;margin-bottom:10px;}.splash-track{font-size:4em;font-weight:900;color:#111111;letter-spacing:-2px;font-family:'Segoe UI',sans-serif;}.splash-mate{font-size:4em;font-weight:900;color:#cc0000;letter-spacing:-2px;font-family:'Segoe UI',sans-serif;}.splash-sub{color:#cc0000;font-size:0.68em;font-weight:700;letter-spacing:4px;text-transform:uppercase;margin-bottom:40px;font-family:'Segoe UI',sans-serif;}.splash-bar{width:220px;height:3px;background:#f0f0f0;border-radius:3px;overflow:hidden;}.splash-bar-fill{height:100%;width:0;background:linear-gradient(90deg,#800000,#cc0000);border-radius:3px;animation:barFill 2s cubic-bezier(0.4,0,0.2,1) forwards;}@keyframes barFill{0%{width:0;}60%{width:75%;}85%{width:90%;}100%{width:100%;}}.splash-btn{margin-top:32px;padding:14px 44px;background:linear-gradient(135deg,#cc0000,#800000);color:white;border:none;border-radius:10px;font-size:1em;font-weight:700;letter-spacing:0.5px;cursor:pointer;box-shadow:0 6px 24px rgba(180,0,0,0.3);transition:all 0.2s;font-family:'Segoe UI',sans-serif;}.splash-btn:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(180,0,0,0.4);}.splash-btn:active{transform:translateY(0);}@keyframes btnIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}#splash.hide{animation:splashOut 0.7s cubic-bezier(0.4,0,1,1) forwards;}@keyframes splashOut{0%{opacity:1;transform:scale(1);}100%{opacity:0;transform:scale(1.03);}}
+:root{--maroon:#800000;--gray:#707070;--light:#f5f5f5;}
+*{box-sizing:border-box;}
+body{font-family:'Segoe UI',sans-serif;margin:0;background:var(--light);display:flex;height:100vh;}
+#login-screen{position:fixed;width:100%;height:100%;background:var(--maroon);display:flex;justify-content:center;align-items:center;z-index:9999;}
+.login-card{background:white;padding:20px 20px;border-radius:12px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.3);width:400px;max-width:95vw;max-height:92vh;overflow-y:auto;}
+.login-card h2{color:var(--maroon);margin:0 0 5px 0;}
+.login-card p{color:var(--gray);margin:0 0 20px 0;}
+.login-card label{display:block;text-align:left;color:var(--gray);font-weight:bold;margin-bottom:4px;}
+.login-card input,.login-card select{width:100%;padding:10px;border:1px solid #ccc;border-radius:4px;margin-bottom:8px;font-size:1em;box-sizing:border-box;}
+.login-card button{width:100%;padding:12px;font-size:1.1em;background:var(--maroon);color:white;border:none;border-radius:6px;cursor:pointer;font-weight:bold;transition:all 0.2s;}
+.login-card button:hover{background:#500000;transform:translateY(-2px);}
+.login-card button:active{transform:translateY(0);}
+.login-tabs{display:flex;gap:0;margin-bottom:20px;border-bottom:3px solid var(--maroon);}
+.login-tab-btn{flex:1;padding:14px;background:transparent;border:none;color:var(--gray);font-weight:bold;font-size:1em;cursor:pointer;border-bottom:3px solid transparent;transition:all 0.3s;}
+.login-tab-btn.active{color:var(--maroon);border-bottom-color:var(--maroon);background:#f9f9f9;}
+.login-tab-btn:hover{background:#f5f5f5;color:var(--maroon);}
+.login-tab-content{display:none;}
+.login-tab-content.active{display:block;animation:fadeIn 0.3s ease-in;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
+.form-group{margin-bottom:8px;}
+.creds{margin-top:15px;font-size:0.72em;color:var(--gray);text-align:left;line-height:1.8;}
+.password-wrapper{position:relative;display:block;width:100%;margin-bottom:8px;}
+.password-wrapper input{width:100%;padding:10px 40px 10px 12px;border:1px solid #ccc;border-radius:4px;font-size:1em;box-sizing:border-box;}
+.password-wrapper .eye-icon{position:absolute;right:10px;top:50%;transform:translateY(-50%);cursor:pointer;width:24px;height:24px;user-select:none;color:var(--gray);transition:color 0.2s;display:flex;align-items:center;justify-content:center;line-height:1;}
+.password-wrapper .eye-icon:hover{color:var(--maroon);}
+.password-wrapper .eye-icon:hover{color:var(--maroon);transform:translateY(-50%) scale(1.15);}
+.password-toggle-btn:hover{color:var(--maroon);}
+.password-toggle-btn svg{width:18px;height:18px;}
+.sidebar{width:300px;min-width:300px;background:var(--maroon);color:white;padding:20px 15px;display:flex;flex-direction:column;overflow-y:auto;}
+.sidebar h3{margin:0 0 15px 0;font-size:1.2em;border-bottom:1px solid rgba(255,255,255,0.3);padding-bottom:10px;}
+.info-box{border:1px solid rgba(255,255,255,0.3);padding:12px;border-radius:8px;margin-bottom:15px;}
+.container{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.top-nav{background:white;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--gray);}
+.content{padding:20px;overflow-y:auto;flex:1;}
+.stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:15px;margin-bottom:20px;}
+.stat-card{background:white;padding:15px;border-radius:8px;border-left:5px solid var(--maroon);text-align:center;}
+.stat-card h2{margin:5px 0 0 0;font-size:2em;}
+.panel{background:white;padding:20px;border-radius:8px;margin-bottom:15px;box-shadow:0 2px 4px rgba(0,0,0,0.06);}
+.panel h3,.panel h4{margin:0 0 12px 0;color:var(--maroon);}
+.pending-item{background:white;margin:4px 0;padding:10px;border-radius:4px;border-left:3px solid var(--maroon);border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center;gap:8px;}
+.pending-item span{flex:1;font-weight:bold;}
+.btn-red{background:#dc3545;color:white;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;font-size:0.85em;font-weight:bold;}
+.btn-green{background:#28a745;color:white;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;font-size:0.85em;font-weight:bold;}
+.btn-yellow{background:#ffc107;color:#212529;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;font-size:0.85em;font-weight:bold;}
+.btn-maroon{background:var(--maroon);color:white;border:none;padding:10px 22px;border-radius:4px;cursor:pointer;font-weight:bold;}
+.sec-btn{padding:12px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);color:white;border-radius:6px;cursor:pointer;font-size:1em;font-weight:bold;width:100%;transition:all 0.2s;}
+.sec-btn.active{background:rgba(255,255,255,0.35);border:2px solid white;}
+.sec-btn:hover{background:rgba(255,255,255,0.2);}
+table{width:100%;border-collapse:collapse;background:white;border-radius:8px;overflow:hidden;}
+th{background:var(--gray);color:white;padding:12px;text-align:left;}
+td{padding:12px;border-bottom:1px solid #ddd;}
+.pill{padding:4px 10px;border-radius:20px;font-size:0.85em;font-weight:bold;display:inline-block;}
+.pill.Present{background:#d4edda;color:#155724;}
+.pill.Absent{background:#f8d7da;color:#721c24;}
+.pill.Excused{background:#fff3cd;color:#856404;}
+#adviser-screen{display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:var(--light);overflow-y:auto;z-index:1000;}
+.adv-wrap{padding:30px;max-width:1200px;margin:0 auto;}
+.adv-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px;border-bottom:3px solid var(--maroon);padding-bottom:15px;}
+.adv-header h1{color:var(--maroon);margin:0;font-size:2em;}
+.class-btn{padding:18px;background:var(--maroon);color:white;border:none;border-radius:10px;cursor:pointer;font-weight:bold;font-size:1.1em;transition:all 0.2s;}
+.class-btn:hover{background:#500000;}
+.class-btn.active{background:#28a745;}
+.adv-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:20px;}
+.adv-stat{background:white;padding:20px;border-radius:8px;border-left:5px solid var(--maroon);text-align:center;}
+.adv-stat h2{margin:8px 0 0 0;font-size:2em;}
+.subj-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px;margin-bottom:20px;}
+.subj-card{background:white;padding:15px;border-radius:8px;border-left:5px solid var(--maroon);}
+.subj-card h4{margin:0 0 10px 0;color:var(--maroon);}
+.subj-row{display:flex;justify-content:space-between;margin-bottom:6px;}
+.modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.55);z-index:9998;justify-content:center;align-items:center;}
+.modal-overlay.open{display:flex;}
+.modal-box{background:white;border-radius:12px;padding:30px;width:460px;max-width:95vw;box-shadow:0 10px 40px rgba(0,0,0,0.3);max-height:90vh;overflow-y:auto;}
+.modal-box h3{color:var(--maroon);margin:0 0 18px 0;}
+.modal-box label{display:block;font-weight:bold;color:var(--gray);margin-bottom:4px;margin-top:10px;}
+.modal-box input,.modal-box select{width:100%;padding:9px;border:1px solid #ccc;border-radius:4px;font-size:1em;margin-bottom:4px;}
+.modal-actions{display:flex;gap:10px;margin-top:18px;}
+.modal-actions button{flex:1;padding:11px;font-size:1em;border:none;border-radius:6px;cursor:pointer;font-weight:bold;}
+.student-tag{display:inline-flex;align-items:center;background:#f0f0f0;border:1px solid #ccc;border-radius:20px;padding:4px 10px;margin:3px;font-size:0.88em;gap:6px;}
+.student-tag button{background:none;border:none;color:#dc3545;cursor:pointer;font-size:1em;padding:0;line-height:1;}
+#student-tags{min-height:36px;border:1px solid #ddd;border-radius:6px;padding:6px;margin-bottom:8px;background:#fafafa;}
+.danger-btn{background:#dc3545;color:white;border:none;padding:9px 16px;border-radius:6px;cursor:pointer;font-weight:bold;font-size:0.9em;}
+.warn-box{background:#fff3cd;border:1px solid #ffc107;border-radius:6px;padding:12px;font-size:0.88em;color:#856404;margin-bottom:12px;}
+</style>
+</head>
+<body>
+<div id="splash">
+<div class="splash-content">
+<div class="splash-icon">
+<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" fill="none">
+<!-- book body -->
+<rect x="8" y="6" width="26" height="34" rx="3" fill="rgba(255,255,255,0.18)" stroke="white" stroke-width="1.8"/>
+<!-- spine -->
+<line x1="14" y1="6" x2="14" y2="40" stroke="rgba(255,255,255,0.35)" stroke-width="1.5"/>
+<!-- lines on page -->
+<line x1="19" y1="15" x2="29" y2="15" stroke="rgba(255,255,255,0.6)" stroke-width="1.5" stroke-linecap="round"/>
+<!-- checkmark row -->
+<line x1="19" y1="21" x2="24" y2="21" stroke="rgba(255,255,255,0.6)" stroke-width="1.5" stroke-linecap="round"/>
+<polyline points="17,20.5 18.5,22 21,19" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<!-- second check row -->
+<line x1="19" y1="27" x2="24" y2="27" stroke="rgba(255,255,255,0.6)" stroke-width="1.5" stroke-linecap="round"/>
+<polyline points="17,26.5 18.5,28 21,25" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<!-- pen -->
+<g transform="rotate(-35,36,32)">
+<rect x="33" y="24" width="5" height="14" rx="1.5" fill="white" opacity="0.9"/>
+<polygon points="33,38 38,38 35.5,43" fill="white" opacity="0.9"/>
+<rect x="33" y="24" width="5" height="3" rx="1" fill="rgba(255,255,255,0.4)"/>
+</g>
+</svg>
+</div>
+<div class="splash-wordmark">
+<span class="splash-track">Track</span><span class="splash-mate">Mate</span>
+</div>
+<div class="splash-sub">NVC Digital Monitoring System</div>
+<div class="splash-bar"><div class="splash-bar-fill"></div></div>
+<button class="splash-btn" id="splash-continue" onclick="document.getElementById('splash').classList.add('hide');setTimeout(function(){document.getElementById('splash').style.display='none';},800);" style="display:none;">Continue to Log In →</button>
+</div>
+</div>
+<script>setTimeout(function(){document.getElementById('splash-continue').style.display='block';},2200);</script>
+<div id="login-screen">
+    <div class="login-card">
+    <div style="text-align:center;margin-bottom:25px;">
+      <h1 style="color:var(--maroon);margin:0 0 5px 0;font-size:2em;">NVC MONITORING</h1>
+      <p style="color:var(--gray);margin:0;font-size:0.9em;">Digital Attendance System</p>
+    </div>
+    
+    <div class="login-tabs">
+      <button class="login-tab-btn active" id="login-tab-btn" onclick="switchLoginTab('login')" style="border-bottom:3px solid var(--maroon);color:var(--maroon);background:#f9f9f9;">📝 Sign In</button>
+      <button class="login-tab-btn" id="register-tab-btn" onclick="switchLoginTab('register')" style="border-bottom:3px solid transparent;color:var(--gray);">➕ Create Account</button>
+    </div>
+    
+    <!-- LOGIN TAB -->
+    <div id="login-tab" class="login-tab-content active">
+      <div class="form-group">
+        <label>Email Address:</label>
+        <input type="email" id="login-email" placeholder="your.email@gmail.com" spellcheck="false" autocomplete="email" onkeypress="if(event.key==='Enter')attemptLogin()">
+      </div>
+      <div class="form-group">
+        <label>Password:</label>
+        <div class="password-wrapper">
+          <input type="password" id="login-pass" placeholder="Enter your password" spellcheck="false" autocomplete="current-password" onkeypress="if(event.key==='Enter')attemptLogin()">
+          <span class="eye-icon" onclick="togglePasswordVisibility('login-pass')" title="Show/Hide password">
+            <svg id="eye-login" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Login As:</label>
+        <select id="login-role" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:4px;font-size:1em;">
+          <option value="teacher">👨‍🏫 Teacher</option>
+          <option value="adviser">👨‍💼 Adviser</option>
+        </select>
+      </div>
+      <button onclick="attemptLogin()" style="width:100%;padding:12px;font-size:1.1em;background:var(--maroon);color:white;border:none;border-radius:6px;cursor:pointer;font-weight:bold;margin-bottom:12px;">Sign In</button>
+      <p style="color:var(--gray);font-size:0.85em;text-align:center;margin:0;">Don't have an account? <button onclick="switchLoginTab('register')" style="background:none;border:none;color:var(--maroon);cursor:pointer;font-weight:bold;text-decoration:underline;padding:0;">Create one</button></p>
+    </div>
+    
+    <!-- REGISTER TAB -->
+    <div id="register-tab" class="login-tab-content">
+      <div style="background:#f0f8ff;border:1px solid #b0d4ff;padding:10px;border-radius:6px;margin-bottom:15px;font-size:0.85em;color:#0066cc;">
+        ℹ️ Create your account using your Gmail address
+      </div>
+      <div class="form-group">
+        <label>Full Name:</label>
+        <input type="text" id="reg-name" placeholder="John Doe" spellcheck="false" autocomplete="name" onkeypress="if(event.key==='Enter'){document.getElementById('reg-email').focus();}">
+      </div>
+      <div class="form-group">
+        <label>Gmail Address:</label>
+        <input type="email" id="reg-email" placeholder="your.email@gmail.com" spellcheck="false" autocomplete="email" onkeypress="if(event.key==='Enter'){document.getElementById('reg-role').focus();}">
+      </div>
+      <div class="form-group">
+        <label>Account Type:</label>
+        <select id="reg-role" onchange="updateRegisterFields()" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:4px;font-size:1em;">
+          <option value="">-- Select Role --</option>
+          <option value="teacher">👨‍🏫 Teacher</option>
+          <option value="adviser">👨‍💼 Adviser</option>
+        </select>
+      </div>
+      
+      <!-- TEACHER SUBJECT FIELD -->
+      <div id="reg-teacher-fields" style="display:none;">
+        <div class="form-group">
+          <label>📚 Select or Enter Your Subject:</label>
+          <select id="reg-subject" onchange="handleSubjectChange()" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:4px;font-size:1em;margin-bottom:8px;">
+            <option value="">-- Select a Subject --</option>
+            <optgroup label="Core Subjects">
+              <option value="MATHEMATICS">MATHEMATICS</option>
+              <option value="ENGLISH">ENGLISH</option>
+              <option value="SCIENCE">SCIENCE</option>
+              <option value="SOCIAL STUDIES">SOCIAL STUDIES</option>
+              <option value="HISTORY">HISTORY</option>
+            </optgroup>
+            <optgroup label="Technology & IT">
+              <option value="COMPUTER">COMPUTER</option>
+              <option value="INFORMATION TECHNOLOGY">INFORMATION TECHNOLOGY</option>
+              <option value="TECHNICAL SKILLS">TECHNICAL SKILLS</option>
+            </optgroup>
+            <optgroup label="Science Specializations">
+              <option value="PHYSICS">PHYSICS</option>
+              <option value="CHEMISTRY">CHEMISTRY</option>
+              <option value="BIOLOGY">BIOLOGY</option>
+            </optgroup>
+            <optgroup label="Business & Economics">
+              <option value="ACCOUNTING">ACCOUNTING</option>
+              <option value="ECONOMICS">ECONOMICS</option>
+              <option value="BUSINESS MANAGEMENT">BUSINESS MANAGEMENT</option>
+              <option value="ENTREPRENEURSHIP">ENTREPRENEURSHIP</option>
+            </optgroup>
+            <optgroup label="Arts & Skills">
+              <option value="ARTS">ARTS</option>
+              <option value="MUSIC">MUSIC</option>
+              <option value="PHYSICAL EDUCATION">PHYSICAL EDUCATION</option>
+              <option value="VOCATIONAL">VOCATIONAL</option>
+            </optgroup>
+            <option value="CUSTOM">+ Add Custom Subject</option>
+          </select>
+          <input type="text" id="reg-subject-custom" placeholder="Enter custom subject name" spellcheck="false" autocomplete="off" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:4px;font-size:1em;display:none;margin-bottom:8px;" onkeypress="if(event.key==='Enter')registerAccount()">
+        </div>
+      </div>
+      
+      <!-- ADVISER SECTION FIELD -->
+      <div id="reg-adviser-fields" style="display:none;">
+        <div class="form-group">
+          <label>👥 Assigned Section (Optional):</label>
+          <select id="reg-section" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:4px;font-size:1em;">
+            <option value="">-- All Sections --</option>
+            <option value="ICT11">ICT11</option>
+            <option value="ICT12">ICT12</option>
+            <option value="ABM11">ABM11</option>
+            <option value="ABM12">ABM12</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Password (6+ characters):</label>
+        <div class="password-wrapper">
+          <input type="password" id="reg-pass" placeholder="Create a strong password" spellcheck="false" autocomplete="new-password" onkeypress="if(event.key==='Enter')registerAccount()">
+          <span class="eye-icon" onclick="togglePasswordVisibility('reg-pass')" title="Show/Hide password">
+            <svg id="eye-regpass" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Confirm Password:</label>
+        <div class="password-wrapper">
+          <input type="password" id="reg-pass-confirm" placeholder="Re-enter password" spellcheck="false" autocomplete="new-password" onkeypress="if(event.key==='Enter')registerAccount()">
+          <span class="eye-icon" onclick="togglePasswordVisibility('reg-pass-confirm')" title="Show/Hide password">
+            <svg id="eye-regpassconf" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </span>
+        </div>
+      </div>
+      <button onclick="registerAccount()" style="width:100%;padding:12px;font-size:1.1em;background:var(--maroon);color:white;border:none;border-radius:6px;cursor:pointer;font-weight:bold;margin-bottom:12px;">Create Account</button>
+      <p style="color:var(--gray);font-size:0.85em;text-align:center;margin:0;">Already have an account? <button onclick="switchLoginTab('login')" style="background:none;border:none;color:var(--maroon);cursor:pointer;font-weight:bold;text-decoration:underline;padding:0;">Sign in</button></p>
+    </div>
+    
+    <div class="creds">
+      <strong>🔒 Security Note:</strong> Your account data is stored securely. Use a strong password.
+    </div>
+    </div>
+</div>
+<div class="sidebar" id="teacher-sidebar" style="display:none;">
+    <h3>NVC SYSTEM</h3>
+    <div class="info-box">
+    <div style="font-size:0.8em;color:rgba(255,255,255,0.7);">Logged in as:</div>
+    <div id="t-name" style="font-weight:bold;font-size:1.05em;margin-top:3px;"></div>
+    <div id="t-subj" style="font-size:0.85em;color:rgba(255,255,255,0.8);margin-top:2px;"></div>
+    </div>
+    <div style="margin-bottom:15px;">
+    <div style="font-size:0.85em;color:rgba(255,255,255,0.7);margin-bottom:8px;font-weight:bold;">SELECT SECTION:</div>
+    <div id="section-buttons" style="display:grid;gap:8px;"></div>
+    </div>
+    <div class="info-box" id="cur-section-box" style="display:none;">
+    <div style="font-size:0.8em;color:rgba(255,255,255,0.7);">Teaching Section:</div>
+    <div id="cur-section-label" style="font-weight:bold;font-size:1.1em;margin-top:3px;"></div>
+    </div>
+    <div style="margin-top:auto;padding-top:15px;border-top:1px solid rgba(255,255,255,0.2);font-size:0.85em;color:rgba(255,255,255,0.7);">
+    Morning: 08:00-12:00 &nbsp; Afternoon: 13:00-17:00
+    </div>
+    <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px;">
+    <button onclick="openAddStudents('teacher')" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.4);color:white;padding:9px;border-radius:6px;cursor:pointer;font-weight:bold;font-size:0.9em;">&#128100; Add Students</button>
+    <button onclick="openAddSection()" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.4);color:white;padding:9px;border-radius:6px;cursor:pointer;font-weight:bold;font-size:0.9em;">&#43; Add Section</button>
+    <button onclick="openRemoveSection()" style="background:rgba(220,53,69,0.5);border:1px solid rgba(255,255,255,0.3);color:white;padding:9px;border-radius:6px;cursor:pointer;font-weight:bold;font-size:0.9em;">🗑 Remove Section</button>
+    <button onclick="openReset('teacher')" style="background:rgba(220,53,69,0.7);border:1px solid rgba(255,255,255,0.3);color:white;padding:9px;border-radius:6px;cursor:pointer;font-weight:bold;font-size:0.9em;">⚠️ Reset School Year</button>
+    </div>
+</div>
+<div class="container" id="teacher-container" style="display:none;">
+    <div class="top-nav">
+    <div><strong id="live-date"></strong> &nbsp;|&nbsp; <span id="live-clock"></span></div>
+    <div style="display:flex;align-items:center;gap:15px;">
+        <span id="live-shift" style="color:var(--maroon);font-weight:bold;"></span>
+        <button onclick="window.location.reload()" style="background:#dc3545;color:white;border:none;padding:9px 18px;border-radius:6px;cursor:pointer;font-weight:bold;">&#x1F6AA; Logout</button>
+    </div>
+    </div>
+    <div class="content">
+    <div class="stats-row">
+        <div class="stat-card">Present<h2 id="cnt-p">0</h2></div>
+        <div class="stat-card">Absent<h2 id="cnt-a">0</h2></div>
+        <div class="stat-card">Excused<h2 id="cnt-e">0</h2></div>
+    </div>
+    <div class="panel">
+        <h3 id="panel-title">Attendance</h3>
+        <div style="text-align:center;margin-top:10px;">
+        <button class="btn-maroon" onclick="saveAllRecords()" style="width:220px;padding:14px;font-size:1.1em;border-radius:8px;">Save All Records</button>
+        </div>
+    </div>
+    <div class="panel" id="pending-panel" style="display:none;">
+        <h4>Mark Attendance — change status before saving:</h4>
+        <div id="pending-list" style="max-height:420px;overflow-y:auto;border:1px solid #ddd;padding:8px;border-radius:4px;background:#f9f9f9;"></div>
+        <div style="margin-top:10px;text-align:center;">
+        <button class="btn-maroon" onclick="saveAllRecords()">Save All Records</button>
+        </div>
+    </div>
+    <table>
+        <thead><tr><th>Date</th><th>Time</th><th>Student Name</th><th>Status</th><th>Session</th><th>Teacher</th><th>Subject</th><th>Edit</th></tr></thead>
+        <tbody id="log-body"></tbody>
+    </table>
+    </div>
+</div>
+<div id="adviser-screen">
+    <div class="adv-wrap">
+    <div class="adv-header">
+        <h1 id="adv-title">NVC ADVISER DASHBOARD</h1>
+        <button onclick="window.location.reload()" style="background:#dc3545;color:white;border:none;padding:12px 25px;border-radius:8px;cursor:pointer;font-weight:bold;font-size:1em;">&#x1F6AA; Logout</button>
+    </div>
+    <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;">
+      <button onclick="openAddStudents('adviser')" style="background:var(--maroon);color:white;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;font-weight:bold;">&#128100; Add Students</button>
+      <button onclick="openAddSection()" style="background:#17a2b8;color:white;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;font-weight:bold;">&#43; Add Section</button>
+      <button onclick="openRemoveSection()" style="background:#e67e22;color:white;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;font-weight:bold;">&#128465; Remove Section</button>
+      <button onclick="openReset('adviser')" style="background:#dc3545;color:white;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;font-weight:bold;">&#9888; Reset School Year</button>
+    </div>
+    <div style="margin-bottom:25px;">
+        <div style="font-weight:bold;color:var(--gray);margin-bottom:10px;font-size:1.1em;">Select Class Section:</div>
+        <div id="adv-class-grid" style="display:grid;gap:15px;margin-bottom:15px;"></div>
+    </div>
+    <div style="margin-bottom:25px;">
+        <div style="font-weight:bold;color:var(--gray);margin-bottom:8px;">Search Student:</div>
+        <input type="text" id="student-search" placeholder="Enter student name..." onkeyup="searchStudent()" spellcheck="false" autocomplete="off" style="width:400px;padding:12px;border:2px solid #ccc;border-radius:8px;font-size:1em;">
+    </div>
+    <div id="adv-summary" style="display:none;">
+        <div class="adv-stats">
+        <div class="adv-stat"><div style="color:var(--maroon);font-weight:bold;">Total Students</div><h2 id="adv-total">0</h2></div>
+        <div class="adv-stat"><div style="color:green;font-weight:bold;">Avg Present</div><h2 id="adv-present">0%</h2></div>
+        <div class="adv-stat"><div style="color:red;font-weight:bold;">Avg Absent</div><h2 id="adv-absent">0%</h2></div>
+        <div class="adv-stat"><div style="color:orange;font-weight:bold;">Avg Excused</div><h2 id="adv-excused">0%</h2></div>
+        </div>
+        <div id="subj-cards" class="subj-grid"></div>
+    </div>
+    <div id="adv-records-wrap" style="display:none;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
+        <h3 style="color:var(--maroon);margin:0;">Attendance Records</h3>
+        <div>
+            <button class="btn-green" onclick="saveAdvReport()" style="padding:10px 18px;font-size:1em;margin-right:8px;">Save Report</button>
+            <button onclick="exportToCSV()" style="background:#17a2b8;color:white;border:none;padding:10px 18px;border-radius:4px;cursor:pointer;font-weight:bold;font-size:1em;">Export CSV</button>
+        </div>
+        </div>
+        <div style="overflow-x:auto;">
+        <table>
+            <thead><tr><th>Date</th><th>Time</th><th>Student</th><th>Subject</th><th>Teacher</th><th>Status</th><th>Session</th><th>Edit</th></tr></thead>
+            <tbody id="adv-tbody"></tbody>
+        </table>
+        </div>
+    </div>
+    <div id="adv-no-records" style="display:none;text-align:center;padding:60px;color:var(--gray);">
+    <h3>No attendance records found</h3>
+    <p>No teacher has submitted attendance for this section yet.</p>
+    </div>
+    </div>
+</div>
+
+<!-- ADD STUDENTS MODAL -->
+<div class="modal-overlay" id="modal-students">
+  <div class="modal-box">
+    <h3>&#128100; Add Students</h3>
+    <label>Section:</label>
+    <select id="ms-section" onchange="msLoadExisting()"></select>
+    <label>Student Name:</label>
+    <div style="display:flex;gap:8px;">
+      <input type="text" id="ms-name" placeholder="Type name and press Add" spellcheck="false" autocomplete="off" style="flex:1;" onkeydown="if(event.key==='Enter')msAddTag()">
+      <button class="btn-maroon" onclick="msAddTag()" style="white-space:nowrap;">+ Add</button>
+    </div>
+    <div style="font-size:0.8em;color:var(--gray);margin-bottom:6px;">Current students in section:</div>
+    <div id="student-tags"></div>
+    <div class="modal-actions">
+      <button class="btn-maroon" onclick="msSave()">Save Students</button>
+      <button onclick="closeModal('modal-students')" style="background:#eee;color:#333;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD SECTION MODAL -->
+<div class="modal-overlay" id="modal-section">
+  <div class="modal-box">
+    <h3>&#43; Add New Section</h3>
+    <label>Section Name (e.g. ICT13, ABM13):</label>
+    <input type="text" id="sec-name" placeholder="e.g. ICT13" spellcheck="false" autocomplete="off">
+    <label>Assign to Adviser Group:</label>
+    <select id="sec-adviser">
+      <option value="11">adviser.11 (ICT11 &amp; ABM11 group)</option>
+      <option value="12">adviser.12 (ICT12 &amp; ABM12 group)</option>
+    </select>
+    <div class="modal-actions">
+      <button class="btn-maroon" onclick="saveNewSection()">Create Section</button>
+      <button onclick="closeModal('modal-section')" style="background:#eee;color:#333;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- REMOVE SECTION MODAL -->
+<div class="modal-overlay" id="modal-remove-section">
+  <div class="modal-box">
+    <h3 style="color:#dc3545;">&#128465; Remove Section</h3>
+    <p style="color:var(--gray);font-size:0.9em;margin-top:-10px;">Select a section to remove. Default sections (ICT 11, ICT 12, ABM11, ABM12) cannot be removed.</p>
+    <label>Section to Remove:</label>
+    <select id="remove-sec-select" style="width:100%;padding:9px;border:1px solid #ccc;border-radius:4px;font-size:1em;margin-bottom:4px;"></select>
+    <div class="modal-actions">
+      <button class="danger-btn" onclick="doRemoveSection()" style="flex:1;">Remove Section</button>
+      <button onclick="closeModal('modal-remove-section')" style="background:#eee;color:#333;flex:1;padding:11px;border:none;border-radius:6px;cursor:pointer;font-weight:bold;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESET SCHOOL YEAR MODAL -->
+<div class="modal-overlay" id="modal-reset">
+  <div class="modal-box">
+    <h3 style="color:#dc3545;">&#9888; Reset School Year</h3>
+    <div class="warn-box">This will permanently delete ALL attendance records and student lists for your assigned sections. This cannot be undone. Use only at the start of a new school year.</div>
+    <label>Select sections to reset:</label>
+    <div id="reset-section-checks" style="margin-bottom:12px;"></div>
+    <label>Type <strong>RESET</strong> to confirm:</label>
+    <input type="text" id="reset-confirm-input" placeholder="Type RESET" spellcheck="false" autocomplete="off">
+    <div class="modal-actions">
+      <button class="danger-btn" onclick="doReset()" style="flex:1;">Reset Selected Sections</button>
+      <button onclick="closeModal('modal-reset')" style="background:#eee;color:#333;flex:1;padding:11px;border:none;border-radius:6px;cursor:pointer;font-weight:bold;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+var SECTION_CONFIG={
+    "ICT11":{teachers:[],students:[]},
+    "ICT12":{teachers:[],students:[]},
+    "ABM11":{teachers:[],students:[]},
+    "ABM12":{teachers:[],students:[]}
+};
+var ADVISER_CONFIG=[];
+var registeredUsers=[];
+var currentTeacher="",currentSubject="",currentSection="",currentSelectedClass="",currentEmail="",pendingRecords=[];
+var store={ICT11:[],ICT12:[],ABM11:[],ABM12:[]};
+var adviserSections=[];
+var isOnline=(window.location.protocol!=="file:");
+
+// ===== SECURITY FUNCTIONS =====
+function sanitizeInput(str){
+    if(typeof str!=="string")return "";
+    return str.replace(/[<>\"'&]/g,function(c){
+        return {"<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;","&":"&amp;"}[c];
+    });
+}
+function validateEmail(email){
+    var re=/^[^\s@]+@gmail\.com$/i;
+    return re.test(email);
+}
+function validatePassword(pwd){
+    return pwd&&pwd.length>=6;
+}
+function preventCSS(){
+    try{
+        if(window.location.hash&&window.location.hash.length>2000){window.location.hash="";}
+    }catch(e){}
+}
+// Disable dangerous paste events
+document.addEventListener("paste",function(e){
+    var items=e.clipboardData.items;
+    for(var i=0;i<items.length;i++){
+        if(items[i].kind==="file"){e.preventDefault();}}
+},false);
+preventCSS();
+
+function loadRegisteredUsers(){
+    var saved=localStorage.getItem("nvc_registered_users");
+    if(saved){try{registeredUsers=JSON.parse(saved);}catch(e){}}
+}
+function saveRegisteredUsers(){
+    localStorage.setItem("nvc_registered_users",JSON.stringify(registeredUsers));
+}
+loadRegisteredUsers();
+function loadStorage(){
+    ["ICT11","ICT12","ABM11","ABM12"].forEach(function(s){
+        var d=localStorage.getItem("nvc_"+s);
+        if(d){try{store[s]=JSON.parse(d);}catch(e){}}
+    });
+}
+function saveStorage(s){
+    localStorage.setItem("nvc_"+s,JSON.stringify(store[s]));
+    if(isOnline){
+        try{
+            var xhr=new XMLHttpRequest();
+            xhr.open("POST","/api/save",true);
+            xhr.setRequestHeader("Content-Type","application/json");
+            xhr.send(JSON.stringify({section:s,records:store[s]}));
+        }catch(e){}
+    }
+}
+function syncFromServer(s,cb){
+    if(!isOnline){if(cb)cb();return;}
+    try{
+        var xhr=new XMLHttpRequest();
+        xhr.open("GET","/api/load/"+s,true);
+        xhr.onreadystatechange=function(){
+            if(xhr.readyState===4){
+                if(xhr.status===200){
+                    try{
+                        var res=JSON.parse(xhr.responseText);
+                        if(res.ok&&res.records&&res.records.length>0){
+                            store[s]=res.records;
+                            localStorage.setItem("nvc_"+s,JSON.stringify(store[s]));
+                        }
+                    }catch(e){}
+                }
+                if(cb)cb();
+            }
+        };
+        xhr.send();
+    }catch(e){if(cb)cb();}
+}
+loadStorage();
+function tick(){var now=new Date();var ld=document.getElementById("live-date");var lc=document.getElementById("live-clock");var ls=document.getElementById("live-shift");if(ld)ld.textContent=now.toDateString();if(lc)lc.textContent=now.toLocaleTimeString();if(ls){var h=now.getHours();ls.textContent=(h>=8&&h<12)?"Morning Session (08:00-12:00)":(h>=13&&h<17)?"Afternoon Session (13:00-17:00)":"Outside Hours";}}
+setInterval(tick,1000);tick();
+function validateEmail(email){
+    var re=/^[^\s@]+@gmail\.com$/i;
+    return re.test(email);
+}
+
+function validatePasswordStrength(pass){
+    var hasLetters=/[a-zA-Z]/.test(pass);
+    var hasNumbers=/[0-9]/.test(pass);
+    return hasLetters&&hasNumbers;
+}
+
+function handleSubjectChange(){
+    var sel=document.getElementById("reg-subject");
+    var customInput=document.getElementById("reg-subject-custom");
+    if(sel.value==="CUSTOM"){
+        customInput.style.display="block";
+        customInput.focus();
+    }else{
+        customInput.style.display="none";
+        customInput.value="";
+    }
+}
+
+function togglePasswordVisibility(fieldId){
+    var field=document.getElementById(fieldId);
+    var wrapper=field.parentElement;
+    var svg=wrapper.querySelector("svg");
+    
+    if(field.type==="password"){
+        field.type="text";
+        // Change to eye-slash icon
+        if(svg) svg.innerHTML='<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+    }else{
+        field.type="password";
+        // Change back to eye icon
+        if(svg) svg.innerHTML='<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+    }
+}
+function attemptLogin(){
+    var email=document.getElementById("login-email").value.trim().toLowerCase();
+    var pass=document.getElementById("login-pass").value;
+    var role=document.getElementById("login-role").value;
+    
+    if(!email||!pass){alert("Enter email and password");return;}
+    
+    if(!validateEmail(email)){
+        alert("Invalid email format");
+        return;
+    }
+    
+    var user=registeredUsers.find(function(u){return u.email===email&&u.password===pass&&u.role===role;});
+    if(!user){alert("Invalid credentials or account not found. Please register first.");return;}
+    
+    if(role==="teacher"){
+        currentTeacher=sanitizeInput(user.name);
+        currentSubject=sanitizeInput(user.subject||"General");
+        currentEmail=email;
+        
+        var sections=["ICT11","ICT12","ABM11","ABM12"];
+        currentSection=sections[0];
+        
+        document.getElementById("t-name").textContent=currentTeacher;
+        document.getElementById("t-subj").textContent="Subject: "+currentSubject;
+        buildSectionButtons(sections);
+        updateTeacherView();
+        document.getElementById("login-screen").style.display="none";
+        document.getElementById("teacher-sidebar").style.display="flex";
+        document.getElementById("teacher-container").style.display="flex";
+    }else{
+        currentEmail=email;
+        adviserSections=["ICT11","ICT12","ABM11","ABM12"];
+        if(user.section){
+            adviserSections=[user.section];
+        }
+        
+        document.getElementById("login-screen").style.display="none";
+        buildAdviserDashboard(adviserSections);
+        document.getElementById("adviser-screen").style.display="block";
+    }
+}
+
+function switchLoginTab(tab){
+    var loginTab=document.getElementById("login-tab");
+    var registerTab=document.getElementById("register-tab");
+    var loginBtn=document.getElementById("login-tab-btn");
+    var registerBtn=document.getElementById("register-tab-btn");
+    
+    if(tab==="login"){
+        loginTab.style.display="block";
+        registerTab.style.display="none";
+        loginBtn.style.background="var(--maroon)";
+        loginBtn.style.color="white";
+        registerBtn.style.background="#ddd";
+        registerBtn.style.color="#333";
+    }else{
+        loginTab.style.display="none";
+        registerTab.style.display="block";
+        loginBtn.style.background="#ddd";
+        loginBtn.style.color="#333";
+        registerBtn.style.background="var(--maroon)";
+        registerBtn.style.color="white";
+    }
+}
+
+function updateRegisterFields(){
+    var role=document.getElementById("reg-role").value;
+    var teacherFields=document.getElementById("reg-teacher-fields");
+    var adviserFields=document.getElementById("reg-adviser-fields");
+    
+    teacherFields.style.display="none";
+    adviserFields.style.display="none";
+    
+    if(role==="teacher"){
+        teacherFields.style.display="block";
+    }else if(role==="adviser"){
+        adviserFields.style.display="block";
+    }
+}
+
+function handleSubjectChange(){
+    var select=document.getElementById("reg-subject");
+    var customInput=document.getElementById("reg-subject-custom");
+    
+    if(select.value==="CUSTOM"){
+        customInput.style.display="block";
+        customInput.focus();
+    }else{
+        customInput.style.display="none";
+        customInput.value="";
+    }
+}
+
+function registerAccount(){
+    var name=document.getElementById("reg-name").value.trim();
+    var email=document.getElementById("reg-email").value.trim().toLowerCase();
+    var pass=document.getElementById("reg-pass").value;
+    var passConfirm=document.getElementById("reg-pass-confirm").value;
+    var role=document.getElementById("reg-role").value;
+    
+    if(!name||!email||!pass||!passConfirm||!role){
+        alert("Please fill all required fields");
+        return;
+    }
+    
+    if(!validateEmail(email)){
+        alert("Please use a valid Gmail address (@gmail.com)");
+        return;
+    }
+    
+    if(!validatePassword(pass)){
+        alert("Password must be at least 6 characters with letters and numbers");
+        return;
+    }
+    
+    if(!validatePasswordStrength(pass)){
+        alert("Password must contain both letters and numbers for security");
+        return;
+    }
+    
+    if(pass!==passConfirm){
+        alert("Passwords do not match");
+        return;
+    }
+    
+    if(registeredUsers.find(function(u){return u.email===email;})){
+        alert("Email already registered");
+        return;
+    }
+    
+    name=sanitizeInput(name);
+    var subject="";
+    if(role==="teacher"){
+        var subjectSel=document.getElementById("reg-subject").value;
+        if(subjectSel==="CUSTOM"){
+            subject=sanitizeInput(document.getElementById("reg-subject-custom").value.trim());
+        }else{
+            subject=sanitizeInput(subjectSel);
+        }
+    }
+    
+    var newUser={
+        name:name,
+        email:email,
+        password:pass,
+        role:role,
+        subject:subject,
+        section:role==="adviser"?document.getElementById("reg-section").value:""
+    };
+    
+    if(role==="teacher"&&!newUser.subject){
+        alert("Please select or enter your subject");
+        return;
+    }
+    
+    registeredUsers.push(newUser);
+    saveRegisteredUsers();
+    
+    alert("✅ Account created! You can now log in.");
+    switchLoginTab("login");
+    document.getElementById("login-email").value=email;
+    document.getElementById("login-pass").value="";
+}
+function buildSectionButtons(sections){
+    var grid=document.getElementById("section-buttons");
+    grid.innerHTML="";
+    grid.style.gridTemplateColumns=sections.length>1?"1fr 1fr":"1fr";
+    sections.forEach(function(sec,i){
+    var btn=document.createElement("button");
+    btn.className="sec-btn"+(i===0?" active":"");
+    btn.textContent=sec.replace("ICT","ICT ").replace("ABM","ABM ");
+    (function(s,b){
+        b.onclick=function(){
+        document.querySelectorAll(".sec-btn").forEach(function(x){x.classList.remove("active");});
+        b.classList.add("active");
+        currentSection=s;
+        document.getElementById("cur-section-label").textContent=s.replace("ICT","ICT ").replace("ABM","ABM ");
+        document.getElementById("cur-section-box").style.display="block";
+        pendingRecords=[];renderPending();updateTeacherView();
+        };
+    })(sec,btn);
+    grid.appendChild(btn);
+    });
+    document.getElementById("cur-section-label").textContent=sections[0].replace("ICT","ICT ").replace("ABM","ABM ");
+    document.getElementById("cur-section-box").style.display="block";
+}
+function updateTeacherView(){
+    var t=document.getElementById("panel-title");
+    if(t)t.textContent="Attendance - "+currentSection.replace("ICT","ICT ").replace("ABM","ABM ")+" ("+currentSubject+")";
+    syncFromServer(currentSection,function(){autoLoadRoster();loadTeacherRecords();});
+}
+function autoLoadRoster(){
+    var cfg=SECTION_CONFIG[currentSection];
+    pendingRecords=[];
+    if(cfg&&cfg.students&&cfg.students.length>0){
+    var time=new Date().toLocaleTimeString();
+    var shift=document.getElementById("live-shift").textContent;
+    cfg.students.forEach(function(name,i){
+        pendingRecords.push({id:Date.now()+i,name:name,status:"Present",time:time,shift:shift,teacher:currentTeacher,subject:currentSubject,section:currentSection});
+    });
+    }
+    renderPending();
+}
+function loadTeacherRecords(){
+    var tbody=document.getElementById("log-body");if(!tbody)return;tbody.innerHTML="";
+    var p=0,a=0,e=0;
+    var recs=(store[currentSection]||[]).filter(function(r){return r.subject===currentSubject&&r.teacher===currentTeacher;});
+    recs.forEach(function(r){
+    var tr=tbody.insertRow(0);
+    tr.innerHTML="<td>"+r.date+"</td><td>"+r.time+"</td><td>"+r.student+"</td>"
+        +"<td id='ts-"+r.id+"'><span class='pill "+r.status+"'>"+r.status+"</span></td>"
+        +"<td>"+r.session+"</td><td>"+r.teacher+"</td><td>"+r.subject+"</td>"
+        +"<td><button class='btn-yellow' onclick='editTeacherRow("+r.id+")'>Edit</button></td>";
+    if(r.status==="Present")p++;else if(r.status==="Absent")a++;else e++;
+    });
+    document.getElementById("cnt-p").textContent=p;
+    document.getElementById("cnt-a").textContent=a;
+    document.getElementById("cnt-e").textContent=e;
+}
+function editTeacherRow(id){
+    var cell=document.getElementById("ts-"+id);if(!cell)return;
+    var cur="Present";
+    for(var sec in store){for(var i=0;i<store[sec].length;i++){if(store[sec][i].id===id){cur=store[sec][i].status;break;}}}
+    var opts=["Present","Absent","Excused"].map(function(o){return "<option"+(o===cur?" selected":"")+">"+o+"</option>";}).join("");
+    cell.innerHTML="<select id='te-"+id+"' style='padding:4px;border:1px solid #ccc;border-radius:4px;'>"+opts+"</select>"
+    +" <button class='btn-green' onclick='saveTeacherRow("+id+")' style='margin-left:4px;'>Save</button>"
+    +"<button class='btn-red' onclick='loadTeacherRecords()' style='margin-left:4px;'>Cancel</button>";
+}
+function saveTeacherRow(id){
+    var sel=document.getElementById("te-"+id);if(!sel)return;var val=sel.value;
+    for(var sec in store){
+    for(var i=0;i<store[sec].length;i++){
+        if(store[sec][i].id===id&&store[sec][i].teacher===currentTeacher&&store[sec][i].subject===currentSubject){
+        store[sec][i].status=val;saveStorage(sec);break;
+        }
+    }
+    }
+    loadTeacherRecords();
+}
+function renderPending(){
+    var list=document.getElementById("pending-list");
+    var panel=document.getElementById("pending-panel");
+    if(pendingRecords.length===0){panel.style.display="none";return;}
+    panel.style.display="block";
+    list.innerHTML=pendingRecords.map(function(r){
+    var opts=["Present","Absent","Excused"].map(function(o){return "<option"+(o===r.status?" selected":"")+">"+o+"</option>";}).join("");
+    return "<div class='pending-item'><span>"+r.name+"</span><select onchange='changePendingStatus("+r.id+",this.value)' style='width:auto;padding:5px;border:1px solid #ccc;border-radius:4px;'>"+opts+"</select></div>";
+    }).join("");
+}
+function changePendingStatus(id,val){for(var i=0;i<pendingRecords.length;i++){if(pendingRecords[i].id===id){pendingRecords[i].status=val;break;}}}
+function getMonthFolder(){
+    var now=new Date();
+    var year=now.getFullYear();
+    var month=String(now.getMonth()+1).padStart(2,'0');
+    var monthName=["January","February","March","April","May","June","July","August","September","October","November","December"][now.getMonth()];
+    return monthName+"_"+year+"_("+month+")";
+}
+
+function saveAllRecords(){
+    if(pendingRecords.length===0){alert("No records to save.");return;}
+    var newRecs=[];
+    pendingRecords.forEach(function(r){
+    var rec={id:r.id,date:new Date().toDateString(),time:r.time,student:r.name,subject:r.subject,teacher:r.teacher,status:r.status,session:r.shift,section:r.section,timestamp:new Date().toISOString()};
+    if(!store[r.section])store[r.section]=[];store[r.section].push(rec);newRecs.push(rec);
+    });
+    var affected=[];pendingRecords.forEach(function(r){if(affected.indexOf(r.section)===-1)affected.push(r.section);});
+    affected.forEach(function(s){saveStorage(s);});
+    triggerFileDownload(newRecs);pendingRecords=[];renderPending();loadTeacherRecords();
+    alert("✅ Saved "+newRecs.length+" records. File saved with monthly folder structure.");
+}
+
+function triggerFileDownload(records){
+    if(!records||records.length===0)return;
+    var d=new Date(),df=d.toISOString().split("T")[0];
+    var sections=[];records.forEach(function(r){if(sections.indexOf(r.section)===-1)sections.push(r.section);});
+    var monthFolder=getMonthFolder();
+    var content="NVC ATTENDANCE RECORDS\n";
+    content+="==========================================\n";
+    content+="📁 Folder: "+monthFolder+"\n";
+    content+="📅 Saved: "+d.toDateString()+" "+d.toLocaleTimeString()+"\n";
+    content+="👨‍🏫 Teacher: "+currentTeacher+"\n";
+    content+="📚 Subject: "+currentSubject+"\n";
+    content+="🏫 Sections: "+sections.join(", ")+"\n";
+    content+="📊 Total Records: "+records.length+"\n";
+    content+="==========================================\n\n";
+    records.forEach(function(r,i){content+=(i+1)+". "+r.student+" | "+r.section+" | "+r.status+" | "+r.date+" "+r.time+"\n";});
+    var filename=monthFolder+"/NVC_Attendance_"+sections.join("_")+"_"+currentSubject.replace(/\s+/g,"_")+"_"+df+".txt";
+    doDownload(content,filename,"text/plain");
+}
+
+function doDownload(content,filename,type){
+    var blob=new Blob([content],{type:type});var url=URL.createObjectURL(blob);
+    var a=document.createElement("a");a.href=url;a.download=filename;
+    document.body.appendChild(a);a.click();
+    setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url);},300);
+}
+function buildAdviserDashboard(sections){
+    adviserSections=sections;
+    var label=sections.map(function(s){return s.replace("ICT","ICT ").replace("ABM","ABM ");}).join(" & ");
+    document.getElementById("adv-title").textContent="NVC ADVISER DASHBOARD - "+label;
+    var grid=document.getElementById("adv-class-grid");
+    grid.style.gridTemplateColumns=sections.length>1?"1fr 1fr":"1fr";
+    grid.innerHTML="";
+    sections.forEach(function(sec,i){
+    var lbl=sec.replace("ICT","ICT ").replace("ABM","ABM ");
+    var btn=document.createElement("button");
+    btn.className="class-btn"+(i===0?" active":"");
+    btn.textContent=lbl;
+    (function(s,b){b.onclick=function(){selectClass(s);};})(sec,btn);
+    grid.appendChild(btn);
+});
+  buildSubjCards(sections[0]);
+    selectClass(sections[0]);
+}
+function buildSubjCards(cls){
+    var cfg=SECTION_CONFIG[cls];if(!cfg)return;
+    var cards="";
+    cfg.teachers.forEach(function(t,i){
+    cards+="<div class='subj-card'><h4>"+t.subject+"<br><small style='font-weight:normal;color:var(--gray);'>"+t.name+"</small></h4>";
+    cards+="<div class='subj-row'><span>Present:</span><strong id='sp-"+i+"' style='color:green;'>0</strong></div>";
+    cards+="<div class='subj-row'><span>Absent:</span><strong id='sa-"+i+"' style='color:red;'>0</strong></div>";
+    cards+="<div class='subj-row'><span>Excused:</span><strong id='se-"+i+"' style='color:orange;'>0</strong></div></div>";
+    });
+    document.getElementById("subj-cards").innerHTML=cards;
+}
+function selectClass(cls){
+    if(adviserSections.length>0&&adviserSections.indexOf(cls)===-1){alert("Access denied. You can only view your assigned sections.");return;}
+    currentSelectedClass=cls;
+    document.querySelectorAll(".class-btn").forEach(function(b){b.classList.remove("active");b.style.background="var(--maroon)";});
+    document.querySelectorAll(".class-btn").forEach(function(b){if(b.getAttribute("onclick")&&b.getAttribute("onclick").indexOf(cls)>-1){b.classList.add("active");b.style.background="#28a745";}});
+    buildSubjCards(cls);
+    syncFromServer(cls,function(){renderAdviserRecords(cls);});
+}
+function renderAdviserRecords(cls){
+    if(adviserSections.length>0&&adviserSections.indexOf(cls)===-1){return;}
+    var recs=store[cls]||[];
+    if(recs.length===0){
+    document.getElementById("adv-summary").style.display="none";
+    document.getElementById("adv-records-wrap").style.display="none";
+    document.getElementById("adv-no-records").style.display="block";return;
+    }
+    document.getElementById("adv-no-records").style.display="none";
+    document.getElementById("adv-summary").style.display="block";
+    document.getElementById("adv-records-wrap").style.display="block";
+    var students=[];recs.forEach(function(r){if(students.indexOf(r.student)===-1)students.push(r.student);});
+    var p=0,a=0,e=0;recs.forEach(function(r){if(r.status==="Present")p++;else if(r.status==="Absent")a++;else e++;});
+    var total=recs.length;
+    document.getElementById("adv-total").textContent=students.length;
+    document.getElementById("adv-present").textContent=total>0?Math.round(p/total*100)+"%":"0%";
+    document.getElementById("adv-absent").textContent=total>0?Math.round(a/total*100)+"%":"0%";
+    document.getElementById("adv-excused").textContent=total>0?Math.round(e/total*100)+"%":"0%";
+    var cfg=SECTION_CONFIG[cls];
+    if(cfg){cfg.teachers.forEach(function(t,i){
+    var sr=recs.filter(function(r){return r.subject===t.subject;});
+    var sp=0,sa=0,se=0;
+    sr.forEach(function(r){if(r.status==="Present")sp++;else if(r.status==="Absent")sa++;else se++;});
+    var ep=document.getElementById("sp-"+i),ea=document.getElementById("sa-"+i),ee=document.getElementById("se-"+i);
+    if(ep)ep.textContent=sp;if(ea)ea.textContent=sa;if(ee)ee.textContent=se;
+    });}
+    var sorted=recs.slice().sort(function(x,y){return new Date(y.timestamp||y.date)-new Date(x.timestamp||x.date);});
+    var tbody=document.getElementById("adv-tbody");tbody.innerHTML="";
+    sorted.forEach(function(r){
+    var tr=tbody.insertRow();
+    tr.innerHTML="<td>"+r.date+"</td><td>"+r.time+"</td><td><strong>"+r.student+"</strong></td><td>"+r.subject+"</td><td>"+r.teacher+"</td><td id='as-"+r.id+"'><span class='pill "+r.status+"'>"+r.status+"</span></td><td>"+r.session+"</td><td><button class='btn-yellow' onclick='editAdvRow("+r.id+")'>Edit</button></td>";
+    });
+}
+function editAdvRow(id){
+    var cell=document.getElementById("as-"+id);if(!cell)return;
+    var cur="Present";
+    for(var sec in store){for(var i=0;i<store[sec].length;i++){if(store[sec][i].id===id){cur=store[sec][i].status;break;}}}
+    var opts=["Present","Absent","Excused"].map(function(o){return "<option"+(o===cur?" selected":"")+">"+o+"</option>";}).join("");
+    cell.innerHTML="<select id='ae-"+id+"' style='padding:4px;border:1px solid #ccc;border-radius:4px;'>"+opts+"</select>"
+    +" <button class='btn-green' onclick='saveAdvRow("+id+")' style='margin-left:4px;'>Save</button>"
+    +"<button class='btn-red' onclick='renderAdviserRecords(currentSelectedClass)' style='margin-left:4px;'>Cancel</button>";
+}
+function saveAdvRow(id){
+    var sel=document.getElementById("ae-"+id);if(!sel)return;var val=sel.value;
+    for(var sec in store){
+    if(adviserSections.length>0&&adviserSections.indexOf(sec)===-1)continue;
+    for(var i=0;i<store[sec].length;i++){if(store[sec][i].id===id){store[sec][i].status=val;saveStorage(sec);break;}}
+    }
+    renderAdviserRecords(currentSelectedClass);
+}
+function searchStudent(){
+    var term=document.getElementById("student-search").value.toLowerCase();if(!currentSelectedClass)return;
+    var recs=store[currentSelectedClass]||[];
+    var filtered=term?recs.filter(function(r){return r.student.toLowerCase().indexOf(term)>-1;}):recs;
+    var tbody=document.getElementById("adv-tbody");if(!tbody)return;tbody.innerHTML="";
+    if(filtered.length===0){tbody.innerHTML="<tr><td colspan='8' style='text-align:center;color:var(--gray);padding:20px;'>No matching records.</td></tr>";return;}
+    var sorted=filtered.slice().sort(function(x,y){return new Date(y.timestamp||y.date)-new Date(x.timestamp||x.date);});
+    sorted.forEach(function(r){
+    var tr=tbody.insertRow();
+    tr.innerHTML="<td>"+r.date+"</td><td>"+r.time+"</td><td><strong>"+r.student+"</strong></td><td>"+r.subject+"</td><td>"+r.teacher+"</td><td id='as-"+r.id+"'><span class='pill "+r.status+"'>"+r.status+"</span></td><td>"+r.session+"</td><td><button class='btn-yellow' onclick='editAdvRow("+r.id+")'>Edit</button></td>";
+    });
+}
+function saveAdvReport(){
+    if(!currentSelectedClass){alert("Select a section first.");return;}
+    if(adviserSections.length>0&&adviserSections.indexOf(currentSelectedClass)===-1){alert("Access denied.");return;}
+    var recs=store[currentSelectedClass]||[];
+    if(recs.length===0){alert("No records to save.");return;}
+    var d=new Date(),df=d.toISOString().split("T")[0];
+    var label=currentSelectedClass.replace("ICT","ICT ").replace("ABM","ABM ");
+    var monthFolder=getMonthFolder();
+    var content="NVC ADVISER REPORT\n";
+    content+="==========================================\n";
+    content+="📁 Folder: "+monthFolder+"\n";
+    content+="🏫 Section: "+label+"\n";
+    content+="📅 Generated: "+d.toDateString()+" "+d.toLocaleTimeString()+"\n";
+    content+="📊 Total Records: "+recs.length+"\n";
+    content+="==========================================\n\n";
+    var sorted=recs.slice().sort(function(x,y){return new Date(y.timestamp||y.date)-new Date(x.timestamp||x.date);});
+    sorted.forEach(function(r,i){content+=(i+1)+". "+r.student+" | "+r.subject+" | "+r.teacher+" | "+r.status+" | "+r.date+" "+r.time+"\n";});
+    var filename=monthFolder+"/NVC_Report_"+currentSelectedClass+"_"+df+".txt";
+    doDownload(content,filename,"text/plain");
+    alert("✅ Report saved to: "+filename);
+}
+function exportToCSV(){
+    if(!currentSelectedClass){alert("Select a section first.");return;}
+    if(adviserSections.length>0&&adviserSections.indexOf(currentSelectedClass)===-1){alert("Access denied.");return;}
+    var recs=store[currentSelectedClass]||[];
+    if(recs.length===0){alert("No records to export.");return;}
+    var d=new Date(),df=d.toISOString().split("T")[0];
+    var monthFolder=getMonthFolder();
+    var csv="Date,Time,Student,Subject,Teacher,Status,Session,Section\n";
+    var sorted=recs.slice().sort(function(x,y){return new Date(y.timestamp||y.date)-new Date(x.timestamp||x.date);});
+    sorted.forEach(function(r){csv+=r.date+","+r.time+',"'+r.student+'",'+r.subject+","+r.teacher+","+r.status+","+r.session+","+r.section+"\n";});
+    var filename=monthFolder+"/NVC_Attendance_"+currentSelectedClass+"_"+df+".csv";
+    doDownload(csv,filename,"text/csv");
+    alert("✅ CSV exported to: "+filename);
+}
+function openModal(id){document.getElementById(id).classList.add("open");}
+function closeModal(id){document.getElementById(id).classList.remove("open");}
+var msCurrentTags=[];
+function openAddStudents(role){
+  var sel=document.getElementById("ms-section");
+  sel.innerHTML="";
+  var allowed=[];
+  if(role==="teacher"){
+    for(var sec in SECTION_CONFIG){
+      var cfg=SECTION_CONFIG[sec];
+      for(var i=0;i<cfg.teachers.length;i++){
+        if(cfg.teachers[i].name===currentTeacher){allowed.push(sec);break;}
+      }
+    }
+  }else{
+    allowed=adviserSections.slice();
+  }
+  if(allowed.length===0){alert("No sections available.");return;}
+  allowed.forEach(function(s){
+    var o=document.createElement("option");o.value=s;o.textContent=s.replace("ICT","ICT ").replace("ABM","ABM ");sel.appendChild(o);
+  });
+  if(role==="teacher"&&currentSection){sel.value=currentSection;}
+  else if(role==="adviser"&&currentSelectedClass){sel.value=currentSelectedClass;}
+  msLoadExisting();
+  openModal("modal-students");
+}
+function msLoadExisting(){
+  var sec=document.getElementById("ms-section").value;
+  var cfg=SECTION_CONFIG[sec];
+  msCurrentTags=(cfg&&cfg.students)?cfg.students.slice():[];
+  msRenderTags();
+}
+function msAddTag(){
+  var inp=document.getElementById("ms-name");
+  var name=inp.value.trim().toUpperCase();
+  if(!name)return;
+  if(msCurrentTags.indexOf(name)>-1){alert("Student already in list.");inp.value="";return;}
+  msCurrentTags.push(name);
+  inp.value="";
+  msRenderTags();
+}
+function msRemoveTag(name){
+  msCurrentTags=msCurrentTags.filter(function(n){return n!==name;});
+  msRenderTags();
+}
+function msRenderTags(){
+  var box=document.getElementById("student-tags");
+  if(msCurrentTags.length===0){box.innerHTML="<span style='color:#aaa;font-size:0.85em;'>No students yet.</span>";return;}
+  box.innerHTML=msCurrentTags.map(function(n){
+    return "<span class='student-tag'>"+n+"<button onclick='msRemoveTag(\""+n.replace(/"/g,"&quot;")+"\")'>&#x2715;</button></span>";
+  }).join("");
+}
+function msSave(){
+  var sec=document.getElementById("ms-section").value;
+  if(!SECTION_CONFIG[sec]){alert("Section not found.");return;}
+  SECTION_CONFIG[sec].students=msCurrentTags.slice();
+  localStorage.setItem("nvc_students_"+sec,JSON.stringify(msCurrentTags));
+  closeModal("modal-students");
+  if(currentSection===sec){pendingRecords=[];autoLoadRoster();}
+  alert("Student list for "+sec+" updated ("+msCurrentTags.length+" students).");
+}
+function openAddSection(){
+  document.getElementById("sec-name").value="";
+  openModal("modal-section");
+}
+function saveNewSection(){
+  var name=document.getElementById("sec-name").value.trim().toUpperCase().replace(/\s+/g,"");
+  var advGroup=document.getElementById("sec-adviser").value;
+  if(!name){alert("Enter a section name.");return;}
+  if(SECTION_CONFIG[name]){alert("Section already exists.");return;}
+  SECTION_CONFIG[name]={teachers:[],students:[]};
+  store[name]=[];
+  for(var ai=0;ai<ADVISER_CONFIG.length;ai++){
+    if(ADVISER_CONFIG[ai].email.indexOf("."+advGroup+"@")>-1){
+      ADVISER_CONFIG[ai].sections.push(name);break;
+    }
+  }
+  localStorage.setItem("nvc_sections",JSON.stringify(Object.keys(SECTION_CONFIG)));
+  closeModal("modal-section");
+  alert("Section "+name+" created and added to adviser."+advGroup+" group.");
+}
+function openReset(role){
+  var allowed=[];
+  if(role==="teacher"){
+    for(var sec in SECTION_CONFIG){
+      var cfg=SECTION_CONFIG[sec];
+      for(var i=0;i<cfg.teachers.length;i++){
+        if(cfg.teachers[i].name===currentTeacher){allowed.push(sec);break;}
+      }
+    }
+  }else{
+    allowed=adviserSections.slice();
+  }
+  var box=document.getElementById("reset-section-checks");
+  box.innerHTML=allowed.map(function(s){
+    return "<label style='display:block;margin-bottom:6px;'><input type='checkbox' value='"+s+"' style='width:auto;margin-right:8px;'>"
+      +s.replace("ICT","ICT ").replace("ABM","ABM ")+"</label>";
+  }).join("");
+  document.getElementById("reset-confirm-input").value="";
+  openModal("modal-reset");
+}
+function doReset(){
+  var confirmVal=document.getElementById("reset-confirm-input").value.trim();
+  if(confirmVal!=="RESET"){alert("Type RESET exactly to confirm.");return;}
+  var checks=document.querySelectorAll("#reset-section-checks input[type=checkbox]:checked");
+  if(checks.length===0){alert("Select at least one section.");return;}
+  var resetSections=[];
+  checks.forEach(function(c){resetSections.push(c.value);});
+  resetSections.forEach(function(s){
+    store[s]=[];
+    saveStorage(s);
+    if(SECTION_CONFIG[s]){SECTION_CONFIG[s].students=[];}
+    localStorage.removeItem("nvc_students_"+s);
+    if(isOnline){
+      try{
+        var xhr=new XMLHttpRequest();
+        xhr.open("POST","/api/reset",true);
+        xhr.setRequestHeader("Content-Type","application/json");
+        xhr.send(JSON.stringify({section:s}));
+      }catch(e){}
+    }
+  });
+  closeModal("modal-reset");
+  if(currentSection&&resetSections.indexOf(currentSection)>-1){pendingRecords=[];autoLoadRoster();loadTeacherRecords();}
+  if(currentSelectedClass&&resetSections.indexOf(currentSelectedClass)>-1){renderAdviserRecords(currentSelectedClass);}
+  alert("Reset complete for: "+resetSections.join(", "));
+}
+function openRemoveSection(){
+  var sel=document.getElementById("remove-sec-select");
+  sel.innerHTML="";
+  var customSections=[];
+  for(var sec in SECTION_CONFIG){
+    if(sec!=="ICT11"&&sec!=="ICT12"&&sec!=="ABM11"&&sec!=="ABM12"){
+      customSections.push(sec);
+    }
+  }
+  if(customSections.length===0){alert("No custom sections to remove. (Default sections cannot be removed)");return;}
+  customSections.forEach(function(s){
+    var o=document.createElement("option");o.value=s;o.textContent=s.replace("ICT","ICT ").replace("ABM","ABM ");sel.appendChild(o);
+  });
+  openModal("modal-remove-section");
+}
+function doRemoveSection(){
+  var sec=document.getElementById("remove-sec-select").value;
+  if(!sec){alert("Select a section first.");return;}
+  if(confirm("Are you sure you want to remove section "+sec+"? This cannot be undone.")){
+    delete SECTION_CONFIG[sec];delete store[sec];
+    localStorage.removeItem("nvc_"+sec);localStorage.removeItem("nvc_students_"+sec);
+    for(var ai=0;ai<ADVISER_CONFIG.length;ai++){
+      var idx=ADVISER_CONFIG[ai].sections.indexOf(sec);
+      if(idx>-1){ADVISER_CONFIG[ai].sections.splice(idx,1);}
+    }
+    closeModal("modal-remove-section");
+    alert("Section "+sec+" has been removed.");
+  }
+}
+(function loadPersistedStudents(){
+  for(var sec in SECTION_CONFIG){
+    var saved=localStorage.getItem("nvc_students_"+sec);
+    if(saved){try{SECTION_CONFIG[sec].students=JSON.parse(saved);}catch(e){}}
+  }
+})();
+</script>
+
+</body>
+</html>
